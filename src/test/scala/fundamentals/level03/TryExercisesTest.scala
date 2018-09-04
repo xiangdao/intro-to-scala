@@ -1,6 +1,6 @@
 package fundamentals.level03
 
-import TryTestTypes._
+//import TryTestTypes._
 import fundamentals.level03.TryExercises._
 import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.FunSpec
