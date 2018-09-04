@@ -43,7 +43,12 @@ object ExceptionExercises {
     *
     * Hint: use the isEmpty method on String
     */
-  def getName(providedName: String) : String = ???
+  def getName(providedName: String) : String = {
+    if (providedName.isEmpty)
+      throw new EmptyNameException("provided name is empty")
+    else
+      providedName
+  }
 
   /**
     * Implement the function getAge, so that it either accepts the supplied age
@@ -64,9 +69,16 @@ object ExceptionExercises {
     */
   def getAge(providedAge: String) : Int =
       try {
-        ???
+        val age = providedAge.toInt
+
+        if (age > 120 || age < 1)
+          throw new InvalidAgeRangeException(s"provided age should be between 1-120: $age")
+        else
+          age
       } catch {
-        case _: NumberFormatException => ???
+        case _: NumberFormatException => {
+          throw new InvalidAgeValueException(s"provided age is invalid: $providedAge")
+        }
       }
 
 
@@ -92,7 +104,9 @@ object ExceptionExercises {
     *
     * Hint: Use `getName` and `getAge` from above.
     */
-  def createPerson(name: String, age: String): Person = ???
+  def createPerson(name: String, age: String): Person = {
+    Person(getName(name), getAge(age))
+  }
 
   /**
     * Implement the function createValidPeople to create a List of Person instances
@@ -110,12 +124,12 @@ object ExceptionExercises {
     personStringPairs.map {
       case (name, age) =>
         try {
-          ???
+          Some(createPerson(name, age))
         } catch {
-          case _: EmptyNameException       => ???
+          case _: Exception => None
           //handle in any other exception here
         }
-    }
+    }.collect { case Some(person) => person }
   }
 
   /**
@@ -135,7 +149,13 @@ object ExceptionExercises {
     */
   def collectErrors: List[Exception] = {
     personStringPairs.map {
-      case (name, age) => ???
-    }
+      case (name, age) => {
+        try {
+          createPerson(name, age)
+        } catch {
+          case e: Exception => e
+        }
+      }
+    }.collect { case exception: Exception => exception }
   }
 }
